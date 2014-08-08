@@ -1,0 +1,112 @@
+ ;
+ ;******************************************************************************
+ ;
+ ;  (C)Copyright 2005 - 2011 Marvell. All Rights Reserved.
+ ;
+ ;  THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF MARVELL.
+ ;  The copyright notice above does not evidence any actual or intended
+ ;  publication of such source code.
+ ;  This Module contains Proprietary Information of Marvell and should be
+ ;  treated as Confidential.
+ ;  The information in this file is provided for the exclusive use of the
+ ;  licensees of Marvell.
+ ;  Such users have the right to use, modify, and incorporate this code into
+ ;  products for purposes authorized by the license agreement provided they
+ ;  include this notice and the associated copyright notice with any such
+ ;  product.
+ ;  The information in this file is provided "AS IS" without warranty.
+ ;******************************************************************************
+
+;******************************************************************************
+;**
+;**  FILENAME:  bl_StartUp_ttc._s
+;**
+;**  PURPOSE:   Contain BootLoader StartUp Definitions
+;**
+;******************************************************************************
+
+        MACRO
+        def        $s, $v
+        GBLA        $s
+$s      SETA        $v
+        MEND
+
+;;;;;;;;;; Version Information ;;;;;;;;;;;
+
+ def MajorMinor,   					0x33333031   ; Version 3.3.01
+ def BuildNumber,  					0x00000001   ; Build Number
+ def Date,         					0x06172011   ; Date
+
+;;;;;;;;;;; Stack Related ;;;;;;;;;;;
+ def IrqStackSize,      			0x1100     
+ def SvcStackSize,      			0x1400    ; Dynamic Stack Space
+
+;;;;;;;;;;; Platform defs ;;;;;;;;;;;
+ def Mode_USR,                  	0xD0
+ def Mode_FIQ,                  	0xD1
+ def Mode_IRQ,                  	0xD2
+ def Mode_SVC,                  	0xD3
+ def Mode_Abort,                	0xD7
+ def Mode_Undef,                	0xDB
+ def Mode_System,               	0xDF
+ def MmuControlMmuEnable,           0x00000001
+ def MmuControlAlignFaultEnable,    0x00000002
+ def MmuControlDCacheEnable,        0x00000004
+ def MmuControlWriteBufferEnable,   0x00000008
+ def MmuControlMandatory,           0x00000070
+ def MmuControlBigEndianEnable,     0x00000080
+ def MmuControlSystemEnable,        0x00000100
+ def MmuControlRomEnable,           0x00000200
+ def MmuControlBtbEnable,           0x00000800
+ def MmuControlICacheEnable,        0x00001000
+ def MmuControlIntVectorAdjust,     0x00002000
+ def MmuEnableCp0Access,            0x00000001
+ def ConcanEnableCp1Access,         0x00000002
+ def InterruptEnableCp6Access,      0x00000040
+ def CotullaProductID,              0x500
+ def SabinalProductID,              0x520
+ def BulverdeProductID,             0x110
+ def DimeboxProductID,              0x130
+ def MmuConfig, (MmuControlAlignFaultEnable + MmuControlMandatory + MmuControlRomEnable + MmuControlICacheEnable + MmuControlBtbEnable)
+ def InitUartBaudRate,      		115200
+ def BaseRegisters,         		0x40000000
+ def BasePeripherals,       		BaseRegisters
+
+; New Defs
+ def ResetVector,              		0x00000000
+ def UndefInstrVector,          	0x00000004
+ def SwiVector,                 	0x00000008
+ def PrefAbortVector,           	0x0000000C
+ def DataAbortVector,           	0x00000010
+ def ReservedVector,            	0x00000014
+ def IrqVector,                 	0x00000018
+ def FiqVector,                 	0x0000001C
+ def FlagN,                     	0x80000000
+ def FlagZ,                     	0x40000000
+ def FlagC,                     	0x20000000
+ def FlagV,                     	0x10000000
+ def MaskCC,                    	0xF0000000
+ def IrqDisable,                	0x00000080
+ def FiqDisable,                	0x00000040
+ def IntsDisable,               	IrqDisable + FiqDisable
+ def MaskInts,                  	0x000000C0
+ def UserMode,                  	0x10
+ def FIQMode,                   	0x11
+ def IRQMode,                   	0x12
+ def SVCMode,                   	0x13
+ def AbortMode,                 	0x17
+ def UndefMode,                 	0x1B
+ def SystemMode,                	0x1F
+ def MaskMode,                  	0x1F
+
+; Interrupts @ D428.2000
+ def IntsIcip,              		0x00
+ def IntsIcmr,              		0x04
+ def IntsIclr,              		0x08
+
+; Device base registers @ 4000.0000
+ def InterruptsBase,        		0xD4282000
+
+	END
+ 
+

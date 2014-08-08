@@ -1,0 +1,312 @@
+/******************************************************************************
+ *
+ *  (C)Copyright 2005 - 2011 Marvell. All Rights Reserved.
+ *
+ *  THIS IS UNPUBLISHED PROPRIETARY SOURCE CODE OF MARVELL.
+ *  The copyright notice above does not evidence any actual or intended
+ *  publication of such source code.
+ *  This Module contains Proprietary Information of Marvell and should be
+ *  treated as Confidential.
+ *  The information in this file is provided for the exclusive use of the
+ *  licensees of Marvell.
+ *  Such users have the right to use, modify, and incorporate this code into
+ *  products for purposes authorized by the license agreement provided they
+ *  include this notice and the associated copyright notice with any such
+ *  product.
+ *  The information in this file is provided "AS IS" without warranty.
+ 
+ ******************************************************************************
+**
+**  FILENAME:
+**
+**  PURPOSE:
+**               Client Device Controller descriptors for USB 1.1 and USB 2.0
+**
+**
+**  LAST MODIFIED:
+**
+******************************************************************************/
+
+//-----------------------------------------------------------
+// TVTD  descriptors for boot rom
+//
+// Note: This file is not intended for seperate compilation,
+//       but instead should be "included" in the appropriate
+//       endpoint 0 handling code.  This allows that code to
+//       directly use the sizeof operator on the descriptors
+//       and reuduce the hassle of including external
+//       definitions for descriptor sizes.
+//-----------------------------------------------------------
+
+
+// U2D Endpoint Configuration table
+//===================================
+const XLLP_U2D_EP_CONFIG_TABLE_T defaultU2DEndpointConfigTable[XLLP_U2D_MAX_EP_NUM] =
+{
+//-----------------------------------------------------------------------------------------------------------------------
+//	    NOTE: Don't fight the world, keep this table with contiguous population and in U2D endpoint order!!!
+//				U2D_ENDPOINT_BAD should be all 0's but we use enumerated types whenever possible to avoid compiler warnings
+//
+//  U2D              CN   Int   Alt. USB           EP         EP       Max.              Double  EP    Fifo  Config Info
+//  EP               Num. Num.  Set. EP            Type       Dir      packet            Buff.   Enbl. Size  Reg    Reg
+//                                                                     size              Enbl.               Val    Val
+//-----------------------------------------------------------------------------------------------------------------------
+   U2D_ENDPOINT_0,   0,   0,    0,   U2D_USB_EP_0, U2D_CNTRL, U2D_OUT, U2D_MPS_CNTRL_64, DB_EN,  EP_EN,    64,   0,     0,
+#if CI2_USB_DDR_BUF
+   U2D_ENDPOINT_A,   1,   0,    0,   U2D_USB_EP_1, U2D_BULK,  U2D_IN,  U2D_MPS_BULK_512, DB_EN,  EP_EN,    512,  0,     0,
+   U2D_ENDPOINT_B,   1,   0,    0,   U2D_USB_EP_2, U2D_BULK,  U2D_OUT, U2D_MPS_BULK_512, DB_EN,  EP_EN,    5120, 0,     0,
+#else
+   U2D_ENDPOINT_A,   1,   0,    0,   U2D_USB_EP_1, U2D_BULK,  U2D_IN,  U2D_MPS_BULK_64,  DB_EN,  EP_EN,    512,  0,     0,
+   U2D_ENDPOINT_B,   1,   0,    0,   U2D_USB_EP_2, U2D_BULK,  U2D_OUT, U2D_MPS_BULK_64,  DB_EN,  EP_EN,    5120, 0,     0,
+#endif
+   U2D_ENDPOINT_BAD, 0,   0,    0,   U2D_USB_EP_0, U2D_CNTRL, U2D_OUT, U2D_MPS_0,        DB_DIS, EP_DIS,    0,    0,     0
+// end of table
+};
+
+#define XLLP_UDC_STRING_DESC_LENGTH_PRODUCT_STR 18
+
+// UDC Endpoint Configuration table
+const XLLP_UDC_EP_CONFIG_TABLE_T defaultUdcEndpointConfigTable[XLLP_UDC_MAX_EP_NUM] =
+{
+//  UDC     CN   Int   Alt. USB         EP      EP    Max.          Double  EP      Config.
+//  EP      Num. Num.  Set. EP          Type    Dir   packet        Buff.   Enbl.   Register
+//                                                    size          Enbl.           Value
+ENDPOINT_0, 0,   0,    0,   ENDPOINT_0,   CNTRL,  OUT,  MPS_CNTRL_16, DB_EN,  EP_EN,  0,
+ENDPOINT_A, 1,   0,    0,   ENDPOINT_A,   BULK,   IN,   MPS_BULK_64,  DB_EN,  EP_EN,  0,
+ENDPOINT_B, 1,   0,    0,   ENDPOINT_B,   BULK,   OUT,  MPS_BULK_64,  DB_EN,  EP_EN,  0,
+ENDPOINT_0, 0,   0,    0,   ENDPOINT_0,   CNTRL,  OUT,  0,         	DB_DIS, EP_DIS, 0		// end of table
+};
+
+// The USB 2.0 Function Device Descriptor
+//=======================================
+const XLLP_INT8_T U2DDeviceDesc[] =
+{
+  18,                                       // Descriptor length
+  DEVICE_DESCRIPTOR,                        // Device descriptor
+  0x00,                                     // USB 2.0 (LSB)
+  2,                                        // USB 2.0 (MSB)
+  0xff,                                     // No class
+  0xff,                                     // No sub class
+  0xff,                                     // No protoocol
+  U2D_MPS_CNTRL_64,                         // Max packet size EP0
+  0x86,                                     // Vendor ID (LSB) (Intel VID 32902)
+  0x12,                                     // Vendor ID (MSB)
+  0x2a,                                     // Product ID
+  0x81,                                     // Product ID
+  0,                                        // Device BCD (LSB)
+  0,                                        // Device BCD (MSB)
+  3,                                        // Index of Manufacturer string
+  2,                                        // Index of Product string
+  0,                                        // Index of Serial number string
+  1                                         // Number of configurations
+};
+
+// The USB Function Device Descriptor
+const XLLP_INT8_T UsbDeviceDesc[] = 
+{
+  18,										// Descriptor length
+  DEVICE_DESCRIPTOR,	                    // Device descriptor
+  0x10,		            	                // USB 1.1 (LSB)
+  1,			                            // USB 1.1 (MSB)
+  0xff,			                            // No class
+  0xff,			                            // No sub class
+  0xff,			                            // No protoocol
+  MPS_CNTRL_16,                             // Max packet size EP0
+  0x86,			                            // Vendor ID (LSB) (Intel VID 32902)
+  0x12,			                            // Vendor ID (MSB)
+  0x2a,			                            // Product ID
+  0x81,			                            // Product ID
+  0,			                            // Device BCD (LSB)
+  0,			                            // Device BCD (MSB)
+  3,										// Index of Manufacturer string
+  2,   										// Index of Product string
+  0,	  									// Index of Serial number string
+  1,		                                // Number of configurations
+};
+
+
+// Note:
+//  U2D supports 15 device configurations.
+//  Configurations 1,2, and 3 each support seven interfaces.
+//  This configuration descriptor has 1 configuration:
+//      Configuration 1: BULK IN (EP1), BULK OUT (EP2)
+//  Each of the configurations has one interface.
+
+const XLLP_INT8_T U2DConfigDesc[] =
+{
+     // Configuration 1: Bulk IN, Bulk OUT
+  9,                        // Descriptor length
+  CONFIG_DESCRIPTOR,        // Configuration descriptor
+  32,                       // Total length of this descriptor(LSB)
+  0,                        // Total length of this descriptor(MSB)
+  1,                        // Number interfaces
+  1,                        // Configuration value
+  0,                        // Configuration string index
+  0xC0,                     // Attributes
+  5,                        // Max Power
+
+  9,                                // Descriptor length
+  INTERFACE_DESCRIPTOR,             // Interface descriptor
+  0,                                // Number of interface
+  0,                                // Alternate setting
+  2,                                // Number endpoints
+  0xff,                             // Interface class
+  0xff,                             // Interface sub class
+  0xff,                             // Interface protocol
+  4,                                // index of Interface string descriptor
+
+  7,                                	// Descriptor length
+  ENDPOINT_DESCRIPTOR,              	// Endpoint descriptor
+  0x81,                             	// Endpoint address 1 (IN)
+  U2D_BULK,                         	// Bulk transfer
+#if CI2_USB_DDR_BUF
+  (U2D_MPS_BULK_512  & 0xff),            // Max packet size LSB
+  ((U2D_MPS_BULK_512  & 0xff00) >> 8),   // Max packet size MSB
+#else
+  (U2D_MPS_BULK_64  & 0xff),            // Max packet size LSB
+  ((U2D_MPS_BULK_64  & 0xff00) >> 8),   // Max packet size MSB
+#endif
+  0,									// Polling interval
+
+  7,                                	// Descriptor length
+  ENDPOINT_DESCRIPTOR,              	// Endpoint descriptor
+  0x02,                             	// Endpoint address 2 (OUT)
+  U2D_BULK,                         	// Bulk transfer
+#if CI2_USB_DDR_BUF
+  (U2D_MPS_BULK_512  & 0xff),            // Max packet size LSB
+  ((U2D_MPS_BULK_512  & 0xff00) >> 8),   // Max packet size MSB
+#else
+  (U2D_MPS_BULK_64  & 0xff),            // Max packet size LSB
+  ((U2D_MPS_BULK_64  & 0xff00) >> 8),   // Max packet size MSB
+#endif
+  0,									// Polling interval
+};
+
+// Note: 
+//  UDC supports four device configurations.
+//  Configurations 1,2, and 3 each support seven interfaces.
+//  This configuration descriptor has three configurations:
+//      Configuration 1: BULK IN (EP1), BULK OUT (EP2)
+//      Configuration 2: ISO IN (EP3), ISO OUT (EP4)
+//      Configuration 3: Interrupt IN (EP5), Interrupt OUT (EP6)
+//  Each of the configuration has one interface.  
+
+const XLLP_INT8_T UsbConfigDesc[] = {
+// Configuration 1: Bulk IN, Bulk OUT
+  9,			            // Descriptor length
+  CONFIG_DESCRIPTOR,        // Configuration descriptor
+  32,  						// Total len (LSB)
+  0,			            // Total len (MSB)
+  1,			            // Number interfaces
+  1,			            // Configuration value
+  0,			            // Configuration string index
+  0xC0,			            // Attributes
+  5,			            // Max Power
+
+  9,			            // Descriptor length 
+  INTERFACE_DESCRIPTOR,     // Interface descriptor
+  0,			            // Number of interface
+  0,			            // Alternate setting
+  2,			            // Number endpoints
+  0xff,			            // Interface class 
+  0xff,			            // Interface sub class
+  0xff,			            // Interface protocol
+  4,				// index of Interface string descriptor
+
+  7,			            // Descriptor length
+  ENDPOINT_DESCRIPTOR,      // Endpoint descriptor
+  0x81,			            // Endpoint address 1 (IN)
+  BULK,		                // Bulk transfer 
+  MPS_BULK_64,              // Max packet size LSB
+  0,			            // Max packet size MSB
+  0,			            // Polling interval
+
+  7,			            // Descriptor length
+  ENDPOINT_DESCRIPTOR,      // Endpoint descriptor
+  0x02,			            // Endpoint address 2 (OUT)
+  BULK,		                // Bulk transfer
+  MPS_BULK_64,       	    // Max packet size LSB
+  0,			            // Max packet size MSB
+  0,			            // Polling interval
+};
+
+//
+// Structures below are common to USB 1.1 and USB 2.0
+//
+//
+//
+
+
+// Index 0x0, 4 bytes
+const XLLP_INT8_T UsbStringDesc_LangID[] =
+{
+     // LANGID descriptor
+  4,                        // String Descriptor length = (number of IDs)*2 + 2
+  3,                        // String Descriptor Type = 3
+  0x09,                     // LANGID[0] (LSB)  // 0x409 American English
+  0x04,                     // LANGID[0] (MSB)
+};
+
+// Index 0x1, 16 bytes
+const XLLP_INT8_T UsbStringDesc_ManufacturerStr[] =
+{
+// Manufacturer string
+  14+2,                     // String Descriptor length = String length + 2
+  3,                        // String Descriptor Type = 3
+  'M',0x00,
+  'A',0x00,
+  'R',0x00,
+  'V',0x00,
+  'E',0x00,
+  'L',0x00,             // Manufacturer string (in UNICODE)
+  'L',0x00,
+};
+
+// Index 0x2, 18 bytes
+const XLLP_INT8_T UsbStringDesc_ProductStr[] =
+{
+// Product string
+  12+2,                     // String Descriptor length = String length + 2
+  3,                        // String Descriptor Type = 3
+  'W',0X00,
+  'U',0X00,
+  'K',0X00,
+  'O',0X00,
+  'N',0X00,
+  'G',0X00,
+};
+
+// Index 0x3, 2 bytes
+const XLLP_INT8_T UsbStringDesc_SerialNumStr[] =
+{
+// Serial Number string
+  0+2,                        // String Descriptor length = String length + 2
+  3,                      // String Descriptor Type = 3
+};
+
+// Index 0x4, 18 bytes
+const XLLP_INT8_T UsbStringDesc_InterfaceStr[] =
+{
+// Interface string
+//  18+2,                   // String Descriptor length = String length + 2
+  16+2,                     // String Descriptor length = String length + 2
+  3,                        // String Descriptor Type = 3
+  'F',0x00,
+  'L',0x00,
+  'A',0x00,
+  'S',0x00,
+  'H',0x00,
+  'B',0x00,
+  'V',0x00,
+  'Y',0x00,
+//  'S',0x00,               // Interface string for SECURE part (in UNICODE)
+};
+
+
+// Default string, 2 bytes
+const XLLP_INT8_T UsbStringDesc_DefaultStr[] =
+{
+// Interface string
+  0+2,                    // String Descriptor length = String length + 2
+  3,                      // String Descriptor Type = 3
+};

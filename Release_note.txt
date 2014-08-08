@@ -1,0 +1,186 @@
+SWDownloader for MMP2/WuKong console version release note and history
+
+1.0: initial release
+1.1: patch release
+
+Support features:
+
+1, download images for MMP2 platforms from a blank board;
+2, download images for MMP2 platfomrs from a provisioned board;
+3, now supported boards: MMP2 Brownstone, MMP2 G50;
+4, the directory structure:
+
+ - SWDownloader for MMP2 2.0.0.0
+    - binaries: contains all PC side tools binaries
+    - Brwonstone: for Brownstone board
+    - G50: for G50 board
+
+2.0.0.0 : Change list:
+1, support read card capacity for eMMC, limited in 32 bits;
+2, support upload multi regions of flash;
+3, enable eMMC SDMA and switch eMMC bus rate to 50MHZ for speeding up eMMC operations
+4, modify FBF format and update FBF version to 11;
+5, modify blf format and update blf version to 2.0.0;
+6, remove ini file and move necessary configurations of ini file to blf file
+7, update message report, distinguish notification messages from error messages;
+8, add "erase all" notification;
+9, add "reset BBT" notification;
+10, support skip address;
+11, add key detect for G50 board
+12, support both Brownstone and G50 board
+13, fix non-4 byte aligned image length issue
+14, support win7 OS
+
+2.1.0.0 : Change list:
+1, support sparse image
+2, support trusted boot
+3, support mutli download 
+
+3.0.0.0 : Change list:
+1, support Wukong
+2, add multi FBF download
+3, add nand ID check
+4, remove ONFI, onenand and secured related code
+5, add upload nand with spare areas
+6, add report burnt image length to guide SWD to show burning progress
+7, Fix Size limitation in NTIM for bootloader/MSA image/Arbel/Imei recovery by configuring Erase size in blf file 
+8, Standalone RealiableData file Generator
+
+4.2.0.0 Change list:
+1, support wukong y0
+
+4.3.0.0 Change list:
+1, support spi-nor flash
+
+4.7.0.0 Change list:
+1, update USB lib and tool chain
+2, update spi-nor flash driver that support 32MB spi-nor
+3, add erase all flash done to SWD for the rate of burn/erase progress
+4, support update using AT command
+5, support update using GPIO
+6, add decompress support
+7, add MPU and cache support
+8, add battery charging
+9, add OLED support
+10, add NAND DMA read support
+11, many minor bugs fix
+
+4.7.2.0 Change list
+1, enlarge USB charger limit to 1.25A
+2, add version info
+3, minor changes
+
+4.7.2.1 Change list
+1, update for new NAND support
+2, add MIFI 2.1 NAND/SPI support
+3, decrease DDR size for OBM to 512KB
+4, add erase all flash only support
+5, add pm8607/pm801 support
+6, add LED/OLED support
+7, add battery charging support
+8, add fan540x/rt9455 USB charger support
+9, add resetUE after upload support
+10, add report NAND ID for upload
+11, add production mode support
+12, distinguish USB charger and AC charger
+13, distinguish hot/cold power up
+14, check OLED I2C timeout in case of no OLED
+
+4.7.2.2 Change list
+1, add JIG box check for Samsung MIFI productiom mode
+2, add Nezha MIFI 2.0/2.1 production mode support
+
+4.7.2.3 Change list
+1, add Samsung MIFI Rev0.2 support
+2, update SSP clock to 13MHZ
+3, update reset using system watchdog
+4, add enter download mode using AT command
+5, add reset support after downloading
+6, add TR069 firmware upgrade support for MIFI 2.0/2.1
+7, use ONKey+WPS key to enter download mode for Samsung MIFI 0.1
+
+4.7.2.4 Change list
+1, add OBM version to CP
+2, protect blocks for production mode
+
+4.7.2.5 Change list
+1, add buck4 PWM mode for pm801
+2, fix for checking external power
+3, update block protect for non-production mode
+4, update SSG MIFI 0.2 max charging voltage to 4.35V
+
+4.7.2.6 Change list
+1, add SSG MIFI 0.3 support
+2, report SPI-Nor flash size to SWD for more precise process identification
+3, return 0 precent if battery voltage is lower than 3.4V
+4, update main function
+5, delay 4s before enumerating USB as workaround
+
+4.7.2.7 Change list
+1, add Nezha MIFI 3.1 support
+2, add LWG/LTG switch boot support for Nezha MIFI 3.1
+3, add images CRC check in FBF for downloading
+4, add MRD check for SSG MIFI 0.2/0.3
+5, remove 4s delay
+
+4.7.2.8 Change list
+1, fix SPI-Nor 26MHz read issue
+2, distinguish power on boot LED using ONkey from other wakeup source
+3, add SMPL workaround for pm801
+4, add absolute timer and resume-charging absolute timer
+5, add thermal protection
+6, add MRD check for MIFI 3.1
+7, support LWG/LTG/LWGLTG for MIFI 3.1
+8, not allow board to boot up for external power
+9, always boot up if Jig is connected
+
+4.7.2.9 Change list
+1, add SSG MIFI with NAND support
+2, add notion L02 support
+3, update charging/boot flow according to SSG
+4, update OBM run address
+5, add SLAVE_RESET_B/GPIO60 output LOW for Skylark power on sequence
+6, add qpress support as backup
+7, update max charging current to 1A
+
+4.7.2.10 Change list
+1, update max power off charging current to 650mA
+2, update boot up threshold voltage to 3.45v from 3.6v
+3, add tuned NAND timing
+4, add sboot support for SSG MIFI with NAND
+5, support AT command reset boot up to sboot
+6, update MRD support
+
+4.7.2.11 Change list
+1, add Notion PCIe support
+2, add AZW new OLED support
+3, update temperature table for SSG Mogg
+4, update battery detect/LED for SSG Mogg 0.6
+5, add abnormal battery detect
+6, support read NAND unique ID for SSG Mogg
+7, fix NAND timing for SSG Toshiba NAND
+8, update the address 0x01dxxxxx to 0x07dxxxxx for CP
+9, update MRD flash to CP
+
+4.7.2.12 Change list
+1, add MIFI 4.1 support
+2, add silent reset support
+3, update and enable TR069 support as default
+4, add GigaDevice 32MB SPI-Nor support
+5, update SPI-Nor driver to support 16MB SPI-Nor under 26Mhz
+6, update MPU to cover all 4G address space
+
+4.7.2.13 Change list
+1, update MIFI 4.1/4.1.1 support
+2, update MRD protect
+3, unify LTG/LWG OBM
+4, update SPI-Nor base clock to 13Mhz
+5, update TR069 support
+
+4.7.2.14 Change list
+1, update SD/TR069/WebUI upgrade support
+2, update LTG/LWG support
+3, update SPI-Nor driver
+4, add backup system support
+
+Any issues/questions Please contact: xin@marvell.com
